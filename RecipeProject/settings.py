@@ -139,7 +139,7 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'accounts.MyUser'
 
-django_heroku.settings(local())
+django_heroku.settings(locals())
 
 EMAIL_FROM = env('DJANGO_EMAIL_FROM')
 EMAIL_BCC = env('DJANGO_EMAIL_BCC')

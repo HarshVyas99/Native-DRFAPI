@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import environ
-import django-heroku
+import django_heroku
 import os
 from pathlib import Path
 
@@ -139,7 +139,7 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'accounts.MyUser'
 
-djnago_heroku.settings(local)
+django_heroku.settings(local())
 
 EMAIL_FROM = env('DJANGO_EMAIL_FROM')
 EMAIL_BCC = env('DJANGO_EMAIL_BCC')

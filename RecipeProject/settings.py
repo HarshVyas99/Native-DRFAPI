@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 	'accounts',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,12 @@ EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+}

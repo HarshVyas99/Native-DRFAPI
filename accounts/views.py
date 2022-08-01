@@ -9,7 +9,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from accounts.models import SignupCode, EmailChangeCode, PasswordResetCode
 from accounts.models import send_multi_format_email
 from accounts.serializers import SignupSerializer, LoginSerializer
@@ -18,12 +19,13 @@ from accounts.serializers import PasswordResetVerifiedSerializer
 from accounts.serializers import EmailChangeSerializer
 from accounts.serializers import PasswordChangeSerializer
 from accounts.serializers import UserSerializer
-
+from accounts.serializers import *
 
 class Signup(APIView):
+    
     permission_classes = (AllowAny,)
     serializer_class = SignupSerializer
-
+    @swagger_auto_schema(request_body=SignupSerializer)
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
@@ -71,10 +73,12 @@ class Signup(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+test_param = openapi.Parameter('code', openapi.IN_QUERY, description="code", type=openapi.TYPE_STRING)
+user_response = openapi.Response('response description')
 
 class SignupVerify(APIView):
     permission_classes = (AllowAny,)
-
+    @swagger_auto_schema(manual_parameters=[test_param], responses={200: user_response})
     def get(self, request, format=None):
         code = request.GET.get('code', '')
         verified = SignupCode.objects.set_user_is_verified(code)
@@ -93,9 +97,10 @@ class SignupVerify(APIView):
 
 
 class Login(APIView):
+    
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
-
+    @swagger_auto_schema(request_body=LoginSerializer)
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
@@ -128,9 +133,12 @@ class Login(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
 
+test_param1 = openapi.Parameter('token', openapi.IN_QUERY, description="token", type=openapi.TYPE_STRING)
+user_response1 = openapi.Response('response description')
 class Logout(APIView):
+    
     permission_classes = (IsAuthenticated,)
-
+    @swagger_auto_schema(manual_parameters=[test_param1], responses={200: user_response1})
     def get(self, request, format=None):
         """
         Remove all auth tokens owned by request.user.
@@ -143,9 +151,10 @@ class Logout(APIView):
 
 
 class PasswordReset(APIView):
+    
     permission_classes = (AllowAny,)
     serializer_class = PasswordResetSerializer
-
+    @swagger_auto_schema(request_body=PasswordResetSerializer)
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
@@ -176,10 +185,12 @@ class PasswordReset(APIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
-
+test_param2 = openapi.Parameter('code', openapi.IN_QUERY, description="code", type=openapi.TYPE_STRING)
+user_response2 = openapi.Response('response description')
 class PasswordResetVerify(APIView):
+    
     permission_classes = (AllowAny,)
-
+    @swagger_auto_schema(manual_parameters=[test_param2], responses={200: user_response2})
     def get(self, request, format=None):
         code = request.GET.get('code', '')
 
@@ -200,9 +211,10 @@ class PasswordResetVerify(APIView):
 
 
 class PasswordResetVerified(APIView):
+    
     permission_classes = (AllowAny,)
     serializer_class = PasswordResetVerifiedSerializer
-
+    @swagger_auto_schema(request_body=PasswordResetVerifiedSerializer)
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
@@ -230,9 +242,10 @@ class PasswordResetVerified(APIView):
 
 
 class EmailChange(APIView):
+    
     permission_classes = (IsAuthenticated,)
     serializer_class = EmailChangeSerializer
-
+    @swagger_auto_schema(request_body=EmailChangeSerializer)
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
@@ -266,10 +279,12 @@ class EmailChange(APIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
-
+test_param3 = openapi.Parameter('code', openapi.IN_QUERY, description="code", type=openapi.TYPE_STRING)
+user_response3 = openapi.Response('response description')
 class EmailChangeVerify(APIView):
+    
     permission_classes = (AllowAny,)
-
+    @swagger_auto_schema(manual_parameters=[test_param3], responses={200: user_response3})
     def get(self, request, format=None):
         code = request.GET.get('code', '')
 
@@ -315,9 +330,10 @@ class EmailChangeVerify(APIView):
 
 
 class PasswordChange(APIView):
+    
     permission_classes = (IsAuthenticated,)
     serializer_class = PasswordChangeSerializer
-
+    @swagger_auto_schema(request_body=PasswordChangeSerializer)
     def post(self, request, format=None):
         serializer = self.serializer_class(data=request.data)
 
@@ -337,8 +353,9 @@ class PasswordChange(APIView):
 
 
 class UserMe(APIView):
+    
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
-
+    @swagger_auto_schema(UserSerializer)
     def get(self, request, format=None):
         return Response(self.serializer_class(request.user).data)
